@@ -1,4 +1,4 @@
-# Eyeable Task 1
+# Eyeable - Task 1
 
 React-based data visualization dashboard that fetches population data from the USA Data API and displays it in interactive charts. Users can switch between line and bar charts, adjust time ranges, and customize visualizations.
 
