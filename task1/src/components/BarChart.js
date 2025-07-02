@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Chart from 'chart.js/auto'
 
 export default function BarChart(props) {
-  const { data } = props
+  const { data, color } = props
   const [borderRadiusEnabled, setBorderRadiusEnabled] = useState(false)
   const chartRef = useRef(null)
   const canvasRef = useRef(null)
@@ -21,8 +21,8 @@ export default function BarChart(props) {
           datasets: [{
             label: 'Population',
             data: data.map(d => d.population),
-            backgroundColor: '#10b981',
-            borderColor: '#10b981',
+            backgroundColor: color,
+            borderColor: color,
             borderWidth: 1,
             borderRadius: borderRadiusValue
           }]
@@ -50,17 +50,18 @@ export default function BarChart(props) {
         chartRef.current.destroy()
       }
     }
-  }, [data, borderRadiusEnabled])
+  }, [data, borderRadiusEnabled, color])
 
   return (
     <div>
       <button
         onClick={() => setBorderRadiusEnabled(!borderRadiusEnabled)}
         className="toggle-button"
+        aria-pressed={borderRadiusEnabled}
       >
         {borderRadiusEnabled ? 'Disable Border Radius' : 'Enable Border Radius'}
       </button>
-      <canvas ref={canvasRef} className="chart" />
+      <canvas ref={canvasRef} className="chart" aria-label="Bar chart showing population trends" />
     </div>
   )
 }

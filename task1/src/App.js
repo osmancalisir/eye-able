@@ -10,6 +10,13 @@ export default function App() {
   const [selectedTab, setSelectedTab] = React.useState('line');
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
+  const [fontSize, setFontSize] = React.useState(16);
+  const [lineChartColor, setLineChartColor] = React.useState('#3b82f6');
+  const [barChartColor, setBarChartColor] = React.useState('#10b981');
+
+  React.useEffect(() => {
+    document.documentElement.style.fontSize = `${fontSize}px`;
+  }, [fontSize]);
 
   const transformPopulationData = (json) => {
     return json.data.map(item => ({
@@ -43,6 +50,30 @@ export default function App() {
 
   return (
     <div className="app">
+      <div className="accessibility-controls">
+        <button 
+          onClick={() => setFontSize(f => Math.max(12, f - 2))}
+          className="accessibility-button"
+          aria-label="Decrease font size"
+        >
+          A-
+        </button>
+        <button 
+          onClick={() => setFontSize(16)}
+          className="accessibility-button"
+          aria-label="Reset font size"
+        >
+          Reset Font
+        </button>
+        <button 
+          onClick={() => setFontSize(f => Math.min(24, f + 2))}
+          className="accessibility-button"
+          aria-label="Increase font size"
+        >
+          A+
+        </button>
+      </div>
+
       <div className="api-controls">
         <input
           type="text"
@@ -50,8 +81,14 @@ export default function App() {
           onChange={(e) => setApiUrl(e.target.value)}
           placeholder="https://datausa.io/api/data?drilldowns=Nation&measures=Population"
           className="api-input"
+          aria-label="API URL"
         />
-        <button onClick={fetchData} className="fetch-button" disabled={isLoading}>
+        <button 
+          onClick={fetchData} 
+          className="fetch-button" 
+          disabled={isLoading}
+          aria-label={isLoading ? 'Fetching data' : 'Fetch data'}
+        >
           {isLoading ? 'Fetching...' : 'Fetch'}
         </button>
       </div>
@@ -63,28 +100,60 @@ export default function App() {
       )}
 
       <div className="tab-controls">
-        <button 
-          onClick={() => setSelectedTab('line')} 
-          className={`tab-button ${selectedTab === 'line' ? 'active' : ''}`}
-        >
-          Line Chart
-        </button>
-        <button 
-          onClick={() => setSelectedTab('bar')} 
-          className={`tab-button ${selectedTab === 'bar' ? 'active' : ''}`}
-        >
-          Bar Chart
-        </button>
+        <div className="tab-group">
+          <button 
+            onClick={() => setSelectedTab('line')} 
+            className={`tab-button ${selectedTab === 'line' ? 'active' : ''}`}
+            style={selectedTab === 'line' ? { backgroundColor: lineChartColor } : {}}
+            aria-pressed={selectedTab === 'line'}
+          >
+            Line Chart
+          </button>
+          <input
+            type="color"
+            value={lineChartColor}
+            onChange={(e) => setLineChartColor(e.target.value)}
+            aria-label="Line chart color"
+          />
+        </div>
+        <div className="tab-group">
+          <button 
+            onClick={() => setSelectedTab('bar')} 
+            className={`tab-button ${selectedTab === 'bar' ? 'active' : ''}`}
+            style={selectedTab === 'bar' ? { backgroundColor: barChartColor } : {}}
+            aria-pressed={selectedTab === 'bar'}
+          >
+            Bar Chart
+          </button>
+          <input
+            type="color"
+            value={barChartColor}
+            onChange={(e) => setBarChartColor(e.target.value)}
+            aria-label="Bar chart color"
+          />
+        </div>
       </div>
 
       <div className="controls">
-        <button onClick={() => setTrendLength(3)} className="trend-button">
+        <button 
+          onClick={() => setTrendLength(3)} 
+          className="trend-button"
+          aria-pressed={trendLength === 3}
+        >
           3 Years
         </button>
-        <button onClick={() => setTrendLength(5)} className="trend-button">
+        <button 
+          onClick={() => setTrendLength(5)} 
+          className="trend-button"
+          aria-pressed={trendLength === 5}
+        >
           5 Years
         </button>
-        <button onClick={() => setTrendLength(10)} className="trend-button">
+        <button 
+          onClick={() => setTrendLength(10)} 
+          className="trend-button"
+          aria-pressed={trendLength === 10}
+        >
           10 Years
         </button>
       </div>
@@ -95,8 +164,8 @@ export default function App() {
         </div>
       ) : (
         selectedTab === 'line' 
-          ? <LineChart data={filteredData} /> 
-          : <BarChart data={filteredData} />
+          ? <LineChart data={filteredData} color={lineChartColor} /> 
+          : <BarChart data={filteredData} color={barChartColor} />
       )}
     </div>
   );

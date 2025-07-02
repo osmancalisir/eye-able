@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import Chart from 'chart.js/auto'
 
 export default function LineChart(props) {
-  const { data } = props
+  const { data, color } = props
   const chartRef = useRef(null)
   const canvasRef = useRef(null)
 
@@ -19,11 +19,11 @@ export default function LineChart(props) {
           datasets: [{
             label: 'Population',
             data: data.map(d => d.population),
-            borderColor: '#3b82f6',
-            backgroundColor: '#3b82f6',
+            borderColor: color,
+            backgroundColor: color,
             pointStyle: 'star',
             pointRadius: 5,
-            pointBackgroundColor: '#3b82f6',
+            pointBackgroundColor: color,
             fill: false,
             tension: 0.1
           }]
@@ -51,7 +51,7 @@ export default function LineChart(props) {
         chartRef.current.destroy()
       }
     }
-  }, [data])
+  }, [data, color])
 
-  return <canvas ref={canvasRef} className="chart" />
+  return <canvas ref={canvasRef} className="chart" aria-label="Line chart showing population trends" />
 }
