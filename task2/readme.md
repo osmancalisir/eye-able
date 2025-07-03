@@ -50,6 +50,9 @@ Response (example):
 Hello YourName. Today is the Wednesday, July 2, 2025
 ```
 
+Alternative Setup: Instead of the manual steps above, you can run this command to automatically generate the token and create the .env file:
+sed "s|EYE_ABLE_TOKEN=.*|EYE_ABLE_TOKEN=$(npm run generate-token --silent | tail -n 1)|" .env.example > .env
+
 ### 3. Health check endpoint
 ```bash
 curl http://localhost:4000/health
